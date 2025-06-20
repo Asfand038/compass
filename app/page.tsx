@@ -10,6 +10,7 @@ import {
   UserButton,
 } from '@clerk/nextjs'
 import { useUser } from '@clerk/nextjs';
+import { redirect } from 'next/navigation';
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, isSignedIn } = useUser();
@@ -32,6 +33,7 @@ React.useEffect(() => {
 
         const data = await res.json();
         console.log('✅ User registered:', data);
+        // redirect('/profile');
       } catch (err) {
         console.error('❌ Error registering user:', err);
       }
@@ -41,6 +43,13 @@ React.useEffect(() => {
   }
 }, [isSignedIn, user]);
 
+  // Removed server-side 'await auth()' usage from client component.
+  // If you need to redirect signed-in users, use the 'isSignedIn' value from Clerk's useUser hook:
+  React.useEffect(() => {
+    if (isSignedIn) {
+      redirect('/profile');
+    }
+  }, [isSignedIn]);
   return (
     <>
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
